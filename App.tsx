@@ -4,13 +4,12 @@ import { Sky, ContactShadows } from '@react-three/drei';
 import Matter from 'matter-js';
 import { User, Gem } from 'lucide-react';
 
-// ייבוא מנוע הפיזיקה מה-constants
+// ייבוא המנוע מה-constants במקום להגדיר אותו כאן
 import { getEnvironmentForLevel, ENVIRONMENTS, physicsEngine } from './constants';
 import PlayerCharacter from './components/PlayerCharacter';
 import EnvironmentHandler from './components/EnvironmentHandler';
 import { WorldDecorations } from './components/WorldDecorations';
 import ParallaxBackground from './components/ParallaxBackground';
-import Monster from './components/Monster';
 
 const App: React.FC = () => {
   const [level, setLevel] = useState(1);
@@ -27,7 +26,7 @@ const App: React.FC = () => {
   }, [config]);
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
+    <div className="relative w-full h-screen bg-black overflow-hidden" dir="rtl">
       <Canvas shadows camera={{ position: [0, 15, 25], fov: 45 }}>
         <Suspense fallback={null}>
           <EnvironmentHandler config={config} />
@@ -41,20 +40,13 @@ const App: React.FC = () => {
           />
 
           <ParallaxBackground type={envType} />
-
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, -0.01, 0]}>
-            <planeGeometry args={[100, 100]} />
-            <meshStandardMaterial color={config.accentColor} opacity={0.3} transparent />
-          </mesh>
-
           <WorldDecorations />
           <Sky sunPosition={[100, 20, 100]} />
           <ContactShadows opacity={0.4} scale={50} blur={2} far={4.5} />
         </Suspense>
       </Canvas>
 
-      {/* HUD UI */}
-      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between" dir="rtl">
+      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
         <header className="flex justify-between items-start pointer-events-auto">
           <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4 text-white">
             <User className="text-orange-500" />
