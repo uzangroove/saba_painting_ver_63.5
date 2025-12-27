@@ -1,4 +1,4 @@
-import Matter from 'matter-js';
+import Matter from 'matter-js'; export const physicsEngine = Matter.Engine.create({ gravity: { x: 0, y: 0 } });
 import { EnvironmentType, EnvironmentConfig } from './types';
 
 // הוספת מנוע הפיזיקה כאן שוברת את הלולאה האינסופית
