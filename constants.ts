@@ -1,10 +1,8 @@
-import Matter from 'matter-js'; // חובה להוסיף את זה
+import Matter from 'matter-js';
 import { EnvironmentType, EnvironmentConfig } from './types';
 
-// --- מנוע הפיזיקה עובר לכאן כדי למנוע לופים ---
-export const physicsEngine = Matter.Engine.create({ 
-  gravity: { x: 0, y: 0 } 
-});
+// הוספת מנוע הפיזיקה כאן שוברת את הלולאה האינסופית
+export const physicsEngine = Matter.Engine.create({ gravity: { x: 0, y: 0 } });
 
 export const ENVIRONMENTS: Record<EnvironmentType, EnvironmentConfig> = {
   [EnvironmentType.GROUND]: { 
@@ -19,7 +17,7 @@ export const ENVIRONMENTS: Record<EnvironmentType, EnvironmentConfig> = {
   },
   [EnvironmentType.AIR]: { 
     name: 'שמיים', backgroundColor: '#87ceeb', fogColor: '#e0f7fa', fogDensity: 0.02, 
-    ambientIntensity: 1.2, accentColor: '#ffffff', gravity: [0, 0, 0],
+    ambientIntensity: 1.2, accentColor: '#ffffff', gravity: [0, 0, 0], 
     allowFlight: true, description: 'מרומי השמיים הפתוחים', linearDamping: 0.02
   },
   [EnvironmentType.SPACE]: { 
@@ -42,7 +40,7 @@ export const getEnvironmentForLevel = (l: number): EnvironmentType => {
   return EnvironmentType.VOID;
 };
 
-// --- ניהול מודלים מ-GitHub ---
+// וודא שהכתובת הזו היא ה-RAW של גיטהאב
 const GITHUB_BASE_URL = "https://raw.githubusercontent.com/uzangroove/game_assets/main/";
 export const MONSTER_NAMES = Array.from({ length: 14 }, (_, i) => `monster${i + 1}`);
 export const MONSTER_URLS = MONSTER_NAMES.reduce((acc, name) => {

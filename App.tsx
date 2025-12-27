@@ -4,7 +4,7 @@ import { Sky, ContactShadows } from '@react-three/drei';
 import Matter from 'matter-js';
 import { User, Gem } from 'lucide-react';
 
-// ייבוא מנוע הפיזיקה מה-constants
+// ייבוא המנוע מהקבועים במקום להגדיר אותו כאן
 import { getEnvironmentForLevel, ENVIRONMENTS, physicsEngine } from './constants';
 import PlayerCharacter from './components/PlayerCharacter';
 import EnvironmentHandler from './components/EnvironmentHandler';
@@ -29,8 +29,9 @@ const App: React.FC = () => {
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
       <Canvas shadows camera={{ position: [0, 15, 25], fov: 45 }}>
+        {/* Suspense מחכה לטעינה מגיטהאב. אם הקישור שבור, המסך ישאר שחור */}
         <Suspense fallback={null}>
-          <EnvironmentHandler config={config} />
+          <EnvironmentHandler type={envType} />
           <ambientLight intensity={config.ambientIntensity} />
           <directionalLight position={[10, 20, 10]} castShadow intensity={1.5} />
           
@@ -53,14 +54,13 @@ const App: React.FC = () => {
         </Suspense>
       </Canvas>
 
-      {/* HUD UI */}
       <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between" dir="rtl">
         <header className="flex justify-between items-start pointer-events-auto">
-          <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4">
+          <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4 text-white">
             <User className="text-orange-500" />
             <div>
-              <div className="text-xl font-black text-white">המסע של שמעון</div>
-              <div className="text-xs text-orange-200">שלב {level} • {config.name}</div>
+              <div className="text-xl font-bold">המסע של שמעון</div>
+              <div className="text-xs">שלב {level} • {config.name}</div>
             </div>
           </div>
           <div className="bg-blue-600/50 p-3 rounded-xl border border-blue-400/30 flex items-center gap-3 text-white">
