@@ -3,8 +3,8 @@ import { useFrame, useLoader } from '@react-three/fiber';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
 import Matter from 'matter-js';
-import { MONSTER_URLS, getRandomMonsterName } from '../constants';
-import { physicsEngine } from '../App'; // ייבוא מנוע הפיזיקה מהקובץ הראשי
+// ייבוא הכל מקובץ ה-constants - כולל ה-physicsEngine
+import { MONSTER_URLS, getRandomMonsterName, physicsEngine } from '../constants';
 
 interface MonsterProps {
   position: [number, number, number];

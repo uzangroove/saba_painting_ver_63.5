@@ -1,6 +1,6 @@
+
 import React, { Suspense } from 'react';
 import { useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
 
 interface AssetModelProps {
   url: string;
@@ -17,11 +17,8 @@ const Placeholder = ({ color, scale = 1 }: { color: string, scale?: number }) =>
   </mesh>
 );
 
-// Inner component to safely use the useGLTF hook
 const SafeModel = ({ url, scale, rotation }: { url: string, scale: number, rotation: [number, number, number] }) => {
-  // Since the files might not exist on the server, useGLTF might fail.
-  // In a real environment, we'd use an ErrorBoundary. 
-  // For now, we assume if it reaches here, we attempt the load.
+  // נסיון טעינה; אם הקובץ לא קיים, Suspense יציג את ה-Fallback
   const { scene } = useGLTF(url);
   return <primitive object={scene} scale={[scale, scale, scale]} rotation={rotation} />;
 };
@@ -33,11 +30,10 @@ const AssetModel: React.FC<AssetModelProps> = ({
   scale = 1, 
   rotation = [0, 0, 0] 
 }) => {
-  // Simple check to avoid calling hooks with obviously fake/missing URLs
-  // This prevents Three.js from attempting to 'replace' strings on undefined/empty paths
-  const isValidUrl = url && typeof url === 'string' && url.includes('.');
+  // בדיקה אם ה-URL נראה תקין (סיומת glb/gltf)
+  const isPossiblyValid = url && (url.endsWith('.glb') || url.endsWith('.gltf'));
 
-  if (!isValidUrl) {
+  if (!isPossiblyValid) {
     return <Placeholder color={placeholderColor} scale={placeholderScale} />;
   }
 
