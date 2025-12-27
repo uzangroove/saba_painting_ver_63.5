@@ -1,7 +1,7 @@
 import Matter from 'matter-js';
 import { EnvironmentType, EnvironmentConfig } from './types';
 
-// הגדרת מנוע הפיזיקה כאן שוברת את הלולאה האינסופית
+// הגדרת המנוע כאן שוברת את הלולאה האינסופית
 export const physicsEngine = Matter.Engine.create({ gravity: { x: 0, y: 0 } });
 
 export const ENVIRONMENTS: Record<EnvironmentType, EnvironmentConfig> = {
@@ -40,7 +40,6 @@ export const getEnvironmentForLevel = (l: number): EnvironmentType => {
   return EnvironmentType.VOID;
 };
 
-// ניהול מודלים מ-GitHub
 const GITHUB_BASE_URL = "https://raw.githubusercontent.com/uzangroove/game_assets/main/";
 export const MONSTER_NAMES = Array.from({ length: 14 }, (_, i) => `monster${i + 1}`);
 export const MONSTER_URLS = MONSTER_NAMES.reduce((acc, name) => {

@@ -25,9 +25,10 @@ const App: React.FC = () => {
   }, [config]);
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden" dir="rtl">
+    <div className="relative w-full h-screen bg-black overflow-hidden">
       <Canvas shadows camera={{ position: [0, 15, 25], fov: 45 }}>
-        <Suspense fallback={null}>
+        {/* שיניתי את ה-fallback לטקסט כדי שתראה אם הסצנה נטענת */}
+        <Suspense fallback={<mesh><textGeometry args={['Loading...', {}]} /></mesh>}>
           <EnvironmentHandler config={config} />
           <ambientLight intensity={config.ambientIntensity} />
           <directionalLight position={[10, 20, 10]} castShadow intensity={1.5} />
@@ -51,16 +52,16 @@ const App: React.FC = () => {
         </Suspense>
       </Canvas>
 
-      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
-        <header className="flex justify-between items-start pointer-events-auto">
-          <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4 text-white">
+      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between" dir="rtl">
+        <header className="flex justify-between items-start pointer-events-auto text-white">
+          <div className="bg-black/60 p-4 rounded-2xl border border-white/20 flex items-center gap-4">
             <User className="text-orange-500" />
             <div>
-              <div className="text-xl font-black">המסע של שמעון</div>
-              <div className="text-xs text-orange-200">שלב {level} • {config.name}</div>
+              <div className="text-xl font-bold">המסע של שמעון</div>
+              <div className="text-xs">שלב {level} • {config.name}</div>
             </div>
           </div>
-          <div className="bg-blue-600/50 p-3 rounded-xl border border-blue-400/30 flex items-center gap-3 text-white">
+          <div className="bg-blue-600/50 p-3 rounded-xl border border-blue-400/30 flex items-center gap-3">
             <Gem className="text-blue-300 w-5 h-5" />
             <div className="text-2xl font-black">{diamonds}</div>
           </div>
