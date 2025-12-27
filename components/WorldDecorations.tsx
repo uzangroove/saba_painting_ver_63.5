@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
-import { RandomMonster } from './MonsterComponent'; // הקומפוננטה שיצרנו קודם
+
+import React from 'react';
+import { RandomMonster } from './MonsterComponent';
 
 export function WorldDecorations() {
-  // נגדיר רשימת מיקומים שבהם נרצה להציב מפלצות
   const monsterPositions = [
     [10, 0, -5],
     [-8, 0, -20],
@@ -13,7 +13,6 @@ export function WorldDecorations() {
   return (
     <group>
       {monsterPositions.map((pos, index) => (
-        // כל מפלצת תיבחר רנדומלית מתוך ה-14 ב-GitHub בזמן הטעינה
         <RandomMonster key={index} position={pos as [number, number, number]} />
       ))}
     </group>

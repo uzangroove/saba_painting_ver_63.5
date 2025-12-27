@@ -1,86 +1,40 @@
-
-import React, { useEffect, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
-import Matter from 'matter-js';
+import React, { useRef, useMemo } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
-import AssetModel from './AssetModel';
-import { physicsEngine } from '../App';
+import { MONSTER_URLS, getRandomMonsterName } from './constants';
 
-interface MonsterProps {
-  id: string;
-  position: [number, number, number];
-  onDefeat: (id: string) => void;
-}
-
-const Monster: React.FC<MonsterProps> = ({ id, position, onDefeat }) => {
+export function AnimatedMonster({ position }: { position: [number, number, number] }) {
   const meshRef = useRef<THREE.Group>(null);
-  const bodyRef = useRef<Matter.Body | null>(null);
+  
+  // בחירת מפלצת רנדומלית פעם אחת בלבד
+  const monsterName = useMemo(() => getRandomMonsterName(), []);
+  
+  // טעינת המודל מ-GitHub
+  const obj = useLoader(OBJLoader, MONSTER_URLS[monsterName]);
 
-  useEffect(() => {
-    // Three XZ -> Matter XY
-    const body = Matter.Bodies.circle(position[0], position[2], 1, {
-      frictionAir: 0.05,
-      label: 'monster'
-    });
-    Matter.World.add(physicsEngine.world, body);
-    bodyRef.current = body;
+  // יצירת עותק ייחודי למפלצת הזו
+  const clonedObj = useMemo(() => obj.clone(), [obj]);
 
-    return () => {
-      Matter.World.remove(physicsEngine.world, body);
-    };
-  }, [position]);
+  // לוגיקת האנימציה - רצה בכל פריים (60 פעמים בשנייה)
+  useFrame((state) => {
+    if (!meshRef.current) return;
 
-  useFrame(() => {
-    if (bodyRef.current && meshRef.current) {
-      meshRef.current.position.x = bodyRef.current.position.x;
-      meshRef.current.position.z = bodyRef.current.position.y;
-      meshRef.current.position.y = 1;
-      
-      // Floating animation
-      meshRef.current.position.y += Math.sin(Date.now() * 0.005) * 0.2;
-    }
+    const time = state.clock.getElapsedTime();
+
+    // 1. תנועת ציפה (למעלה-למטה) באמצעות סינוס
+    meshRef.current.position.y = position[1] + Math.sin(time + position[0]) * 0.2;
+
+    // 2. סיבוב עדין סביב עצמה
+    meshRef.current.rotation.y += 0.01;
   });
 
   return (
-    <group 
+    <primitive 
       ref={meshRef} 
-      onClick={(e) => {
-        e.stopPropagation();
-        onDefeat(id);
-      }}
-      onPointerOver={() => {
-        const doc = (window as any).document;
-        if (doc) doc.body.style.cursor = 'crosshair';
-      }}
-      onPointerOut={() => {
-        const doc = (window as any).document;
-        if (doc) doc.body.style.cursor = 'default';
-      }}
-    >
-      <Text
-        position={[0, 1.5, 0]}
-        fontSize={0.3}
-        color="#ff4444"
-        anchorX="center"
-      >
-        מפלצת!
-      </Text>
-
-      <mesh castShadow>
-        <sphereGeometry args={[0.6, 16, 16]} />
-        <meshStandardMaterial color="#880000" emissive="#ff0000" emissiveIntensity={0.5} />
-      </mesh>
-
-      <AssetModel 
-        url="monsters.glb" 
-        placeholderColor="#ff3333" 
-        placeholderScale={1.5}
-        scale={1} 
-      />
-      <pointLight distance={4} intensity={1} color="red" position={[0, 1, 0]} />
-    </group>
+      object={clonedObj} 
+      position={position} 
+      scale={0.5} 
+    />
   );
-};
-
-export default Monster;
+}

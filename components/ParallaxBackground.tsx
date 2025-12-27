@@ -3,7 +3,8 @@ import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
-import { EnvironmentType } from '../constants';
+// Fix: EnvironmentType is defined and exported from types.ts, not constants.ts
+import { EnvironmentType } from '../types';
 
 const Layer = ({ f, d, children }: any) => {
   const r = useRef<THREE.Group>(null);
