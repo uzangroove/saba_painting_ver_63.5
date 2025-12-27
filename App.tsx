@@ -4,12 +4,13 @@ import { Sky, ContactShadows } from '@react-three/drei';
 import Matter from 'matter-js';
 import { User, Gem } from 'lucide-react';
 
-// ייבוא המנוע מה-constants במקום להגדיר אותו כאן
+// ייבוא המנוע מהקבועים
 import { getEnvironmentForLevel, ENVIRONMENTS, physicsEngine } from './constants';
 import PlayerCharacter from './components/PlayerCharacter';
 import EnvironmentHandler from './components/EnvironmentHandler';
 import { WorldDecorations } from './components/WorldDecorations';
 import ParallaxBackground from './components/ParallaxBackground';
+import Monster from './components/Monster';
 
 const App: React.FC = () => {
   const [level, setLevel] = useState(1);
@@ -26,7 +27,7 @@ const App: React.FC = () => {
   }, [config]);
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden" dir="rtl">
+    <div className="relative w-full h-screen bg-black overflow-hidden">
       <Canvas shadows camera={{ position: [0, 15, 25], fov: 45 }}>
         <Suspense fallback={null}>
           <EnvironmentHandler config={config} />
@@ -40,22 +41,28 @@ const App: React.FC = () => {
           />
 
           <ParallaxBackground type={envType} />
+
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, -0.01, 0]}>
+            <planeGeometry args={[100, 100]} />
+            <meshStandardMaterial color={config.accentColor} opacity={0.3} transparent />
+          </mesh>
+
           <WorldDecorations />
           <Sky sunPosition={[100, 20, 100]} />
           <ContactShadows opacity={0.4} scale={50} blur={2} far={4.5} />
         </Suspense>
       </Canvas>
 
-      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
-        <header className="flex justify-between items-start pointer-events-auto">
-          <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4 text-white">
+      <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between" dir="rtl">
+        <header className="flex justify-between items-start pointer-events-auto text-white">
+          <div className="bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex items-center gap-4">
             <User className="text-orange-500" />
             <div>
-              <div className="text-xl font-black">המסע של שמעון</div>
-              <div className="text-xs">שלב {level} • {config.name}</div>
+              <div className="text-xl font-bold">המסע של שמעון</div>
+              <div className="text-xs text-orange-200">שלב {level} • {config.name}</div>
             </div>
           </div>
-          <div className="bg-blue-600/50 p-3 rounded-xl border border-blue-400/30 flex items-center gap-3 text-white">
+          <div className="bg-blue-600/50 p-3 rounded-xl border border-blue-400/30 flex items-center gap-3">
             <Gem className="text-blue-300 w-5 h-5" />
             <div className="text-2xl font-black">{diamonds}</div>
           </div>
